@@ -4,7 +4,9 @@ import { useState } from "react";
 import Botao from '../components/Botao'
 
 interface FormularioProps {
-    cliente: Cliente
+    cliente: Cliente,
+    cancelado? : () => void,
+    clienteMudou? : (cliente: Cliente) => void
 }
 
 export default function Formulario(props: FormularioProps){
@@ -20,8 +22,8 @@ export default function Formulario(props: FormularioProps){
             <Input texto='Nome' valor={nome} onChange={setNome}/>
             <Input texto="Idade" tipo="number" valor={idade} onChange={setIdade}></Input>
             <div className='flex justify-end mt-7'>
-                <Botao className='mr-3 bg-green-600'>{id ? 'Alterar' : 'Salvar'}</Botao>
-                <Botao className='bg-gray-600'>Cancelar</Botao>
+                <Botao className='mr-3 bg-green-600' onClick={() => props.clienteMudou?.(new Cliente (nome, idade, id))}>{id ? 'Alterar' : 'Salvar'}</Botao>
+                <Botao onClick={props.cancelado} className='bg-gray-600'>Cancelar</Botao>
             </div>
         </div>
     )

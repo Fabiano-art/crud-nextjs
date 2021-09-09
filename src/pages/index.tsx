@@ -5,6 +5,7 @@ import Cliente from '../core/Cliente'
 import Table from '../components/Table'
 import Botao from '../components/Botao'
 import Formulario from '../components/Formulario'
+import { useState } from 'react'
 
 export default function Home() {
 
@@ -14,22 +15,44 @@ export default function Home() {
     new Cliente('Miguel', 1)
   ]
 
+  const [mode, setMode] = useState<'table' | 'form'>('table')
+  const [cliente, setCliente] = useState<Cliente>(Cliente.vazio())
+
   function clienteSelecionado(cliente: Cliente){
-    console.log(cliente.nome)
+    setCliente(cliente)
+    setMode('form')
+    
   }
 
   function clienteExcluido(cliente: Cliente){
     console.log('Excluir ' + cliente.nome)
   }
 
+  function insertCliente(cliente: Cliente){
+    console.log(cliente)
+  }
+
+  function novoCliente(){
+    setMode('form')
+    setCliente(Cliente.vazio())
+  }
+  
   return (
     <div className={'flex justify-center h-screen items-center bg-gradient-to-r from-blue-300 to-purple-900'}>
       <Layout titulo="Cadastro">
-        <div className='flex justify-end'>
-          <Botao className='bg-blue-600'>Novo Cliente</Botao>
-        </div>
-        <Table clientes={clientes} clienteSelecionado={clienteSelecionado} clienteExcluido={clienteExcluido}></Table>
-        <Formulario cliente={clientes[1]}></Formulario>
+        {mode === 'table' ? (
+          <>
+            <div className='flex justify-end'>
+              <Botao onClick={novoCliente} className='bg-blue-600'>Novo Cliente</Botao>
+            </div>
+            <Table clientes={clientes} clienteSelecionado={clienteSelecionado} clienteExcluido={clienteExcluido}></Table>
+          </>
+          )
+          :
+          (
+            <Formulario clienteMudou={insertCliente} cliente={cliente} cancelado={() => setMode('table')}></Formulario>
+          )
+        }
       </Layout>
     </div>
   )
